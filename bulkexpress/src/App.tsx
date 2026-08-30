@@ -43,7 +43,7 @@ function App() {
         setError("");
 
         const response = await fetch(
-          "http://127.0.0.1:8000/api/v1/weekly-deals"
+          `${import.meta.env.VITE_API_URL}/api/v1/weekly-deals`
         );
 
         if (!response.ok) {
