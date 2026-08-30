@@ -157,7 +157,7 @@ function App() {
           <a href="#home">Home</a>
 
           <a
-            href="https://github.com/"
+            href="https://github.com/Tsaha11"
             target="_blank"
             rel="noreferrer"
           >
