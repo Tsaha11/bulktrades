@@ -69,3 +69,84 @@ class NSEClient:
             result = response.json()
 
             return result.get("data", [])
+
+    async def get_all_weekly_deals(
+        self,
+        from_date: date,
+        to_date: date,
+    ) -> dict[str, list[dict]]:
+
+        """
+        Fetch all Bulk Deals, Block Deals and
+        Short Selling deals for all companies.
+
+        No symbol is passed, so NSE returns
+        data for all available companies.
+        """
+
+        url = (
+            f"{self.BASE_URL}"
+            "/api/historicalOR/"
+            "bulk-block-short-deals"
+        )
+
+        deal_types = [
+            "bulk_deals",
+            "block_deals",
+            "short_selling",
+        ]
+
+        results = {}
+
+        async with httpx.AsyncClient(
+            http2=False,
+            timeout=30,
+            follow_redirects=True,
+        ) as client:
+
+            # --------------------------------
+            # Establish NSE session
+            # --------------------------------
+
+            await client.get(
+                self.BASE_URL,
+                headers=self.HEADERS,
+            )
+
+            # --------------------------------
+            # Fetch each deal type
+            # --------------------------------
+
+            for deal_type in deal_types:
+
+                params = {
+                    "optionType": deal_type,
+                    "from": from_date.strftime(
+                        "%d-%m-%Y"
+                    ),
+                    "to": to_date.strftime(
+                        "%d-%m-%Y"
+                    ),
+                }
+
+                response = await client.get(
+                    url,
+                    params=params,
+                    headers={
+                        **self.HEADERS,
+                        "Accept": "application/json",
+                        "X-Requested-With": (
+                            "XMLHttpRequest"
+                        ),
+                    },
+                )
+
+                response.raise_for_status()
+
+                result = response.json()
+
+                results[deal_type] = (
+                    result.get("data", [])
+                )
+
+        return results

@@ -89,10 +89,9 @@ async def get_bulk_deals(
             item["BD_TP_WATP"]
         )
 
-        quantity = int(item["BD_QTY_TRD"])
-        price = float(item["BD_TP_WATP"])
-
-        value_crores = (quantity * price) / 10_000_000
+        value_crores = (
+            quantity * price
+        ) / 10_000_000
 
         data.append(
             BulkDeal(
@@ -103,7 +102,10 @@ async def get_bulk_deals(
                 side=item["BD_BUY_SELL"],
                 quantity=quantity,
                 price=price,
-                value_crores=round(value_crores, 2),
+                value_crores=round(
+                    value_crores,
+                    2,
+                ),
                 remarks=item["BD_REMARKS"],
             )
         )
