@@ -43,7 +43,7 @@ function App() {
         setError("");
 
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/v1/weekly-deals`
+          `${process.env.REACT_APP_API_URL}/api/v1/weekly-deals`
         );
 
         if (!response.ok) {
